@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil - Assistant Médical</title>
+    <script>
+      const OPENROUTER_API_KEY =
+        "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"; // Mets ta vraie clé ici
+    </script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .hero {
+        text-align: center;
+        margin-top: 80px;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .hero h1 {
+        font-size: 2.5em;
+        color: #00796b;
+      }
+
+      .hero p {
+        font-size: 1.2em;
+        margin: 20px 0;
+      }
+
+      .hero button {
+        background-color: #0097a7;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .hero button:hover {
+        background-color: #00695c;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .banner {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+      }
+
+      #chatbot-button {
+        position: fixed;
+        bottom: 20px;
+        right: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 999;
+      }
+
+      /* Chatbot Box */
+      #chatbot-box {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 300px;
+        max-height: 400px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+
+      #chatbot-header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      #chatbot-messages {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+        font-size: 14px;
+      }
+
+      .message {
+        margin-bottom: 8px;
+      }
+
+      .user {
+        text-align: right;
+        color: #007bff;
+      }
+
+      .bot {
+        text-align: left;
+        color: #333;
+      }
+
+      #chatbot-input {
+        display: flex;
+        border-top: 1px solid #ccc;
+      }
+
+      #chatbot-input input {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      #chatbot-input button {
+        border: none;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <img src="https://cdn.pixabay.com/photo/2017/08/06/11/39/doctor-2597291_1280.jpg" alt="banner" class="banner" /> -->
+    <div class="hero">
+      <h1>
+        Bienvenue sur l'assistant intelligent de prise de rendez-vous médical
+      </h1>
+      <p>Organisez vos consultations en ligne rapidement et intelligemment</p>
+      <button onclick="window.location.href='login.php'">Se connecter</button>
+    </div>
+    <button id="chatbot-button">💬</button>
+
+    <!-- Chatbot chatbox -->
+    <div id="chatbot-box">
+      <div id="chatbot-header">Assistant Médical</div>
+      <div id="chatbot-messages"></div>
+      <div id="chatbot-input">
+        <input type="text" id="user-input" placeholder="Votre question..." />
+        <button onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+
+    <script>
+      const chatbotBtn = document.getElementById("chatbot-button");
+      const chatbotBox = document.getElementById("chatbot-box");
+      const messagesBox = document.getElementById("chatbot-messages");
+      const userInput = document.getElementById("user-input");
+
+      chatbotBtn.addEventListener("click", () => {
+        chatbotBox.style.display =
+          chatbotBox.style.display === "flex" ? "none" : "flex";
+      });
+
+
+async function sendMessage() {
+  const inputField = document.getElementById("user-input");
+  const msg = inputField.value.trim();
+  if (!msg) return;
+
+  appendMessage(msg, "user");
+  inputField.value = "";
+
+  // Appel à OpenRouter pour analyser la demande
+  const openrouterRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + OPENROUTER_API_KEY
+    },
+    body: JSON.stringify({
+      model: "openai/gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+content: `Tu es un assistant médical intelligent. Aujourd'hui, nous sommes le ${new Date().toISOString().split('T')[0]}.
+Si l'utilisateur pose une question comme « demain » ou « mardi prochain », tu dois convertir ça en une date au bon format (YYYY-MM-DD), à partir de la date du jour.
+Ensuite, extrais uniquement :
+- specialty
+- date
+- time
+Renvoie toujours un JSON comme ceci : { "specialty": "Dentiste", "date": "2025-05-30", "time": "10:00:00" }`
+        },
+        {
+          role: "user",
+          content: msg
+        }
+      ]
+    })
+  });
+
+  const gptData = await openrouterRes.json();
+  const aiContent = gptData.choices?.[0]?.message?.content || "";
+
+  try {
+    const parsed = JSON.parse(aiContent);
+    // Appel à disponibilite.php
+    const dispoRes = await fetch("disponibilite.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parsed)
+    });
+    const dispoData = await dispoRes.json();
+
+    if (dispoData.available) {
+      const doc = dispoData.doctors[0];
+      appendMessage(
+        `✅ Le docteur ${doc.name} (${doc.specialty}) est disponible le ${parsed.date} à ${parsed.time}. Souhaitez-vous réserver ?`,
+        "bot"
+      );
+    } else {
+      appendMessage(dispoData.message || "❌ Aucun médecin disponible." , "bot");
+    }
+  } catch (e) {
+    // Si ce n'était pas une question de rendez-vous ou si JSON invalide
+    appendMessage(aiContent || "Je n'ai pas compris. Pouvez-vous répéter ?", "bot");
+  }
+}
+
+      function appendMessage(text, sender) {
+        const div = document.createElement("div");
+        div.className = `message ${sender}`;
+        div.textContent = text;
+        messagesBox.appendChild(div);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      }
+    </script>
+    <script src="min.js"></script>
+  </body>
+</html>

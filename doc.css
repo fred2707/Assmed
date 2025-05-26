@@ -1,0 +1,159 @@
+:root {
+    --primary-color: #5c7fa3;
+    --secondary-color: #00796b;
+    --accent-color: #e3f2fd;
+    --dark-color: #222;
+    --light-color: #fff;
+    --success-color: #388e3c;
+    --danger-color: #e57373;
+    --sidebar-width: 260px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: var(--accent-color);
+    color: var(--dark-color);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--primary-color);
+    color: var(--light-color);
+    padding: 2rem 1rem;
+    min-height: 100vh;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 1.2rem;
+}
+
+.sidebar nav ul li a {
+    color: var(--light-color);
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    display: block;
+    transition: background 0.2s;
+}
+
+.sidebar nav ul li a.active,
+.sidebar nav ul li a:hover {
+    background: var(--secondary-color);
+}
+
+.main-content {
+    flex: 1;
+    padding: 2.5rem 3vw;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.2em;
+}
+
+.card {
+    background: var(--light-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.appointment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.appointment-list li {
+    background: #f7fafd;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.2rem;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-left: 5px solid var(--primary-color);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border-radius: 12px;
+    font-size: 0.95em;
+    font-weight: 500;
+    background: #e0f7fa;
+    color: #0097a7;
+    margin-top: 0.3em;
+}
+
+.status-accepted {
+    background: #d4f8e8;
+    color: #388e3c;
+}
+
+.status-cancelled {
+    background: #ffeaea;
+    color: #e57373;
+}
+
+.status-pending {
+    background: #fff9e1;
+    color: #bfa100;
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    padding: 0.5em 1.2em;
+    font-size: 1em;
+    cursor: pointer;
+    margin-right: 0.5em;
+    transition: background 0.2s;
+}
+
+.btn-success {
+    background: #388e3c;
+    color: #fff;
+}
+
+.btn-danger {
+    background: #e57373;
+    color: #fff;
+}
+
+.btn-success:hover,
+.btn-danger:hover {
+    opacity: 0.85;
+}

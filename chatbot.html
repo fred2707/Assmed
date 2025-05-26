@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistant de Rendez-vous</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body><img src='https://cdn.pixabay.com/photo/2017/08/06/11/39/doctor-2597291_1280.jpg' alt='banner' style='width:100%; max-height:250px; object-fit:cover;'>
+  <h2>Assistant de Prise de Rendez-vous</h2>
+  <form id="chatForm">
+    <input type="text" id="doctorId" placeholder="ID du médecin" required />
+    <input type="text" id="patientId" placeholder="ID du patient" required />
+    <input type="date" id="preferredDate" required />
+    <button type="submit">Envoyer</button>
+  </form>
+  <div id="responseBox"></div>
+  <script src="script.js"></script>
+</body>
+</html>
